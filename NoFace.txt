@@ -1,6 +1,3 @@
-
-//Developed by Isaac Einstein, Will Rinehart, Kevin Kotobelli, and Deeya Rodrigues
-//Include necessary libraries
 #include <fstream>
 #include <cstring>
 #include <stdio.h>
@@ -21,16 +18,16 @@
 #define CHANGE_IN_CAR_POS 30
 #define MAX_NUMBER_OF_TREES 6
 
-/**
-*
-* This class draws all figures used in the game.
-* It is also responsible for handling player movement, score, collisions,
-* and high scores. The class is largely used to pass the same variables across multiple functinos
-*
-* */
+/** 
+ * 
+ * This class draws all figures used in the game. 
+ * It is also responsible for handling player movement, score, collisions, 
+ * and high scores. The class is largely used to pass the same variables across multiple functinos 
+ * 
+ * */
 class drawObjects
 {
-private:
+public:
     //Amount of buffer time (changes with each level)
     double BUFFER_TIME = 0.1;
 
@@ -79,16 +76,15 @@ private:
     //Have a variable for all 3 levels to indicate which level the user selected
     bool levelOne = false, levelTwo = false, levelThree = false;
 
-public:
     //Functions in the class (Declared as public)
     drawObjects();
     void drawBoard();
     void drawSingleRoad(int);
     void drawForest(int);
     int drawMovingCar(int, int);
-    int drawCarsWithBackground();
-    void collisionWithCar();
-    void collisionWithTree();
+    int drawCarsWithBackground(); //Isaac's making this flowchart
+    void collisionWithCar();      // kevin
+    void collisionWithTree();     // kevin
     void drawMovementKeys();
     void mainmenu();
     void userChoosesMenu();
@@ -97,8 +93,8 @@ public:
     void moveBackToBottom();
     int endgame();
     void quit();
-    int *SDLoad();
-    void SDWrite();
+    int *SDLoad();  // will
+    void SDWrite(); //will
     void stats();
 };
 
@@ -127,11 +123,11 @@ int main()
 }
 
 /**
-* Quit function.
-* Checks if the screen has been clicked. If it has, it will store the coordinates into x and y and then checks if the position is anywehre inside the quit rectangle drawn on screen.
-* If it is, then the whole game will end.
-*
-* @author Kevin Kotobelli
+ * Quit function. 
+ * Checks if the screen has been clicked. If it has, it will store the coordinates into x and y and then checks if the position is anywehre inside the quit rectangle drawn on screen. 
+ * If it is, then the whole game will end.
+ * 
+ * @author Kevin Kotobelli
 */
 void drawObjects::quit()
 {
@@ -142,18 +138,15 @@ void drawObjects::quit()
         {
             rerun = false;
             bigLoop = false;
-
-            //WRITES TO THE SCREEN THAT THE USER QUIT
-            LCD.WriteAt("QUIT!", 150, 10);
         }
     }
 }
 
 /**
-* Draw objects constructor
-* Initializes most variables and arrays used within the class
-*
-* @author Isaac Einstein
+ * Draw objects constructor
+ * Initializes most variables and arrays used within the class
+ * 
+ * @author Isaac Einstein
 */
 drawObjects::drawObjects()
 {
@@ -193,10 +186,10 @@ drawObjects::drawObjects()
 }
 
 /**
-*
-* User written function for home screen of main menu. Displays the main menu
- 
-* @author Deeya Rodrigues
+ * 
+ * User written function for home screen of main menu. Displays the main menu
+
+ * @author Deeya Rodrigues
 */
 void drawObjects::mainmenu()
 {
@@ -220,10 +213,10 @@ void drawObjects::mainmenu()
 }
 
 /**
-*
-* User selects where to go based on menu options.
-*
-* @author Deeya Rodrigues; Isaac Einstein
+ * 
+ * User selects where to go based on menu options.
+ * 
+ * @author Deeya Rodrigues; Isaac Einstein
 */
 void drawObjects::userChoosesMenu()
 {
@@ -316,10 +309,10 @@ void drawObjects::userChoosesMenu()
 }
 
 /**
-* Runs if k = 5, displays a goodbye message. Runs after the endgame function runs (if the user clicks anywhere besides return to main menu)
-*
-* @author Isaac Einstein
-*/
+ * Runs if k = 5, displays a goodbye message. Runs after the endgame function runs (if the user clicks anywhere besides return to main menu)
+ * 
+ * @author Isaac Einstein
+ */
 void goodbye()
 {
     LCD.Clear(GREEN);
@@ -329,12 +322,12 @@ void goodbye()
 }
 
 /**
-* user written fucntion for end game. Displays when the user loses the game.
-* Shows the user's score and gives the option to return to the main menu.
-* If the user clicks anywhere else, the game ends
-*
-* @author Isaac Einstein; Deeya Rodrigues
-*/
+ * user written fucntion for end game. Displays when the user loses the game. 
+ * Shows the user's score and gives the option to return to the main menu.
+ * If the user clicks anywhere else, the game ends
+ * 
+ * @author Isaac Einstein; Deeya Rodrigues
+ */
 int drawObjects::endgame()
 {
     int returnVal = 5;
@@ -381,11 +374,11 @@ int drawObjects::endgame()
 }
 
 /**
-* user written function for display state
-* SHows the current high score for each level
- 
-* @author Will Rinehart; Deeya Rodrigues
-*/
+ * user written function for display state
+ * SHows the current high score for each level
+
+ * @author Will Rinehart; Deeya Rodrigues
+ */
 void drawObjects::stats()
 {
     //clear screen
@@ -412,10 +405,10 @@ void drawObjects::stats()
 }
 
 /**
-* Gives the instructions of the game
- 
-* @author Deeya Rodrigues
-*/
+ * Gives the instructions of the game
+
+ * @author Deeya Rodrigues
+ */
 void instructions()
 {
     //clear screen
@@ -439,10 +432,10 @@ void instructions()
 }
 
 /**
-* Gives the credits of the game
- 
-* @author Deeya Rodrigues
-*/
+ * Gives the credits of the game
+
+ * @author Deeya Rodrigues
+ */
 void credits()
 {
     //clear screen
@@ -469,8 +462,7 @@ void credits()
 *
 * All code needed to draw the background with the
 * cars moving on roads. Calls all other functions besides those
-* related to the main menu. Big shoutout to the amazing TA Samara Einstein 
-* for all her help on this!!
+* related to the main menu.
 *
 * @author Isaac Einstein; Kevin Kotobelli
 */
@@ -574,7 +566,7 @@ int drawObjects::drawCarsWithBackground()
                 LCD.SetDrawColor(LCD.Blue);
 
                 /* Instead of clearing a screen the program redraws a blank road before looping back and drawing
-          a car again; gives the appearance of the car moving even though it's just being drawn over. Only runs if there is no collision before */
+           a car again; gives the appearance of the car moving even though it's just being drawn over. Only runs if there is no collision before */
 
                 for (int j = 0; j < NUM_OF_ROADS; j++)
                 {
@@ -582,9 +574,6 @@ int drawObjects::drawCarsWithBackground()
                 }
 
                 LCD.DrawRectangle(playerPositionX, playerPositionY + 4, 24, 24);
-                LCD.DrawVerticalLine(playerPositionX + 4, playerPositionY + 4 + 6, playerPositionY + 4 + 24 - 14);
-                LCD.DrawVerticalLine(playerPositionX + 20, playerPositionY + 4 + 6, playerPositionY + 4 + 24 - 14);
-                LCD.DrawHorizontalLine(playerPositionY + 4 + 18, playerPositionX + 5, playerPositionX + 24 - 5);
             }
 
             //Redraw board once the user reaches the top of the screen
@@ -629,11 +618,11 @@ int drawObjects::drawCarsWithBackground()
 }
 
 /**
-* Test to see if there's a collision with a tree
-* The x and y coordinates of the tree were stored in arrays midtreex and midtreey. A hitbox of 50 by 30 is drawn around and if the player intersects with that hitbox it is game over
-*
-* @author Kevin Kotobelli; Isaac Einstein
-*/
+ * Test to see if there's a collision with a tree 
+ * The x and y coordinates of the tree were stored in arrays midtreex and midtreey. A hitbox of 50 by 30 is drawn around and if the player intersects with that hitbox it is game over
+ * 
+ * @author Kevin Kotobelli; Isaac Einstein
+ */
 void drawObjects::collisionWithTree()
 {
     for (int i = 0; i < MAX_NUMBER_OF_TREES; i++)
@@ -655,11 +644,11 @@ void drawObjects::collisionWithTree()
 }
 
 /**
-* Test to see if there's a collision with a car
-* The x and y coordinates of the car were stored in arrays carPositionX and carPositionY. A hitbox of 50 by 30 is drawn around and if the player intersects with that hitbox it is game over
-*
-* @author Kevin Kotobelli; Isaac Einstein
-*/
+ * Test to see if there's a collision with a car 
+ * The x and y coordinates of the car were stored in arrays carPositionX and carPositionY. A hitbox of 50 by 30 is drawn around and if the player intersects with that hitbox it is game over
+ * 
+ * @author Kevin Kotobelli; Isaac Einstein
+ */
 void drawObjects::collisionWithCar()
 {
     //Boolean to determine if the program should keep running or not
@@ -694,7 +683,7 @@ void drawObjects::collisionWithCar()
 * @return state integer array that is now filled with either 0's or 1's.
 * Used later to determine where a moving car should be placed
 *
-* @author Isaac Einstein, Will Rinehart
+* @author Isaac Einstein
 */
 void drawObjects::drawBoard()
 {
@@ -722,8 +711,8 @@ void drawObjects::drawBoard()
         i++;
 
         /* FAILSAFE: If all elements are assigned (0/1) but there aren't NUM_OF_ROADS roads,
-    restart the process. Set all variables back to 0 and loop through again make
-    until there are NUM_OF_ROADS roads */
+     restart the process. Set all variables back to 0 and loop through again make
+     until there are NUM_OF_ROADS roads */
 
         //if all 6 elements are assigned before the necessary number of roads are assignmed...
         if (i == 6 && currNumRoads < NUM_OF_ROADS)
@@ -764,7 +753,7 @@ void drawObjects::drawBoard()
 *
 * @param yPos integer of the top left y position of the row
 *
-* @author Isaac Einstein, Will Rinehart
+* @author Isaac Einstein
 */
 void drawObjects::drawSingleRoad(int y)
 {
@@ -793,8 +782,8 @@ void drawObjects::drawSingleRoad(int y)
 * @param yPos integer of the top left y position of the row
 *
 * @return xCoordinates integer array containing all the x values of trees
-*
-* @author Isaac Einstein, Will Rinehart
+* 
+* @author Isaac Einstein
 */
 
 void drawObjects::drawForest(int y)
@@ -877,12 +866,12 @@ int drawObjects::drawMovingCar(int xPos, int yPos)
 }
 
 /**
-*  Function Player Movement 
-* It initializes variables x and y and checks for touch. If touch is detected, the coordinates of that touch are stored into x and y.
-* If touch is detected, it will draw over the original rectangle in green to erase it and then calculate what needs to be changed in the coordinates of the old position to get to the new position
-* It checks if the user clicked either of the movement keys on the bottom right of the screen and changes the values of the players position accordingly
-* Once the movement has been registered, the rectangle will be moved a specific amount of pixels in the direction where the user wanted it to
-*  @author Kevin Kotobelli
+ *  Function Player Movement  
+ * It initializes variables x and y and checks for touch. If touch is detected, the coordinates of that touch are stored into x and y. 
+ * If touch is detected, it will draw over the original rectangle in green to erase it and then calculate what needs to be changed in the coordinates of the old position to get to the new position 
+ * It checks if the user clicked either of the movement keys on the bottom right of the screen and changes the values of the players position accordingly 
+ * Once the movement has been registered, the rectangle will be moved a specific amount of pixels in the direction where the user wanted it to
+ *  @author Kevin Kotobelli
 */
 void drawObjects::playerMovement()
 {
@@ -892,9 +881,6 @@ void drawObjects::playerMovement()
     {
         LCD.SetDrawColor(LCD.Green);
         LCD.DrawRectangle(playerPositionX, playerPositionY + 4, 24, 24);
-        LCD.DrawVerticalLine(playerPositionX + 4, playerPositionY + 4 + 6, playerPositionY + 4 + 24 - 14);
-        LCD.DrawVerticalLine(playerPositionX + 20, playerPositionY + 4 + 6, playerPositionY + 4 + 24 - 14);
-        LCD.DrawHorizontalLine(playerPositionY + 4 + 18, playerPositionX + 5, playerPositionX + 24 - 5);
 
         /*-------------------------------------------------------*/
 
@@ -957,10 +943,10 @@ void drawObjects::playerMovement()
 }
 
 /**
-* Draw the movement keys and quit button onto the screen
-* This function draws three squares with lines indicating direction at the bottom right corner of the screen. This is so the user knows where to press to move the player
-* This function also draws the quit button on the screen so the user knows where to click to prematurely end the game
-*  @author Kevin Kotobelli
+ * Draw the movement keys and quit button onto the screen
+ * This function draws three squares with lines indicating direction at the bottom right corner of the screen. This is so the user knows where to press to move the player
+ * This function also draws the quit button on the screen so the user knows where to click to prematurely end the game
+ *  @author Kevin Kotobelli
 */
 void drawObjects::drawMovementKeys()
 {
@@ -982,11 +968,11 @@ void drawObjects::drawMovementKeys()
 }
 
 /**
-* This function allows the user to select which difficulty they would like to play on. Level 1 is beginner. Level 2 is intermediate. Level 3 is Expert.
-* Each level comes with a different buffer time for the cars. The higher the difficulty the faster the cars move and the harder it is to cross the road.
-*
-* @author Isaac Einstein
-*/
+ * This function allows the user to select which difficulty they would like to play on. Level 1 is beginner. Level 2 is intermediate. Level 3 is Expert.
+ * Each level comes with a different buffer time for the cars. The higher the difficulty the faster the cars move and the harder it is to cross the road.
+ * 
+ * @author Isaac Einstein
+ */
 void drawObjects::selectLevel()
 {
 
@@ -1061,11 +1047,11 @@ void drawObjects::selectLevel()
 }
 
 /**
-* This function moves the player back to the bottom of the screen once they reach the end.
-* This way, the game can keep running with different levels, instead of just ending once the player reaches the top.
-*
-* @author Isaac Einstein
-*
+ * This function moves the player back to the bottom of the screen once they reach the end.
+ * This way, the game can keep running with different levels, instead of just ending once the player reaches the top.
+ * 
+ * @author Isaac Einstein
+ *
 */
 void drawObjects::moveBackToBottom()
 {
@@ -1081,11 +1067,11 @@ void drawObjects::moveBackToBottom()
 }
 
 /**
-* This function allows the game to save data like high scores into a text document and display them in the beginning and end of the game.
-* It opens up file Group_G_log.txt and scans the data into the document for later use.
-*
-* @author Will Rinehart
-*/
+ * This function allows the game to save data like high scores into a text document and display them in the beginning and end of the game.
+ * It opens up file Group_G_log.txt and scans the data into the document for later use.
+ * 
+ * @author Will Rinehart
+ */
 int *drawObjects::SDLoad()
 {
     //open log file
@@ -1103,12 +1089,12 @@ int *drawObjects::SDLoad()
 }
 
 /**
-* This function writes the highscores saved in the Group_G data file to screen for the user to see.
-* It calculates whether or not the user beat the current highscore by using if statements.
-*
-* @author Will Rinehart
-*
-*/
+ * This function writes the highscores saved in the Group_G data file to screen for the user to see.
+ * It calculates whether or not the user beat the current highscore by using if statements.
+ * 
+ * @author Will Rinehart
+ *
+ */
 void drawObjects::SDWrite()
 {
     //if level one is selected, check to see if highscore is broken
