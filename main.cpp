@@ -24,6 +24,7 @@ while (!LCD.Touch(&x,&y))
 }
 
 
+
     while (1)
     {
         LCD.Update();
