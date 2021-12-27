@@ -1,36 +1,75 @@
-GITBINARY := git
-FEHURL := google.com
-FIRMWAREREPO := simulator_firmware
+CC = g++
+LD = $(CC)
+GITBINARY = git
+FIRMWAREREPO = simulator_libraries
+FEHURL = code.osu.edu
 
-ifeq ($(OS), Windows_NT)
+CPPFLAGS = -MMD -MP -Os -DOBJC_OLD_DISPATCH_PROTOTYPES -g
+
+WARNINGS = -Wall
+
+LIB_DIR = simulator_libraries
+
+INC_DIRS = -I$(LIB_DIR) -I.
+
+OBJS = $(LIB_DIR)/FEHLCD.o $(LIB_DIR)/FEHRandom.o $(LIB_DIR)/FEHSD.o $(LIB_DIR)/FEHUtility.o $(LIB_DIR)/tigr.o $(LIB_DIR)/FEHImages.o 
+ifeq ($(OS),Windows_NT)
+	LDFLAGS = -lopengl32 -lgdi32
+	EXEC = game.exe
 	SHELL := CMD
+else
+	LDFLAGS = -framework OpenGL -framework Cocoa
+	EXEC = game.out
 endif
 
-game: *.cpp
-ifeq ($(OS), Windows_NT)
-	@echo off && if exist "${FIRMWAREREPO}" ( \
-		cd "$(FIRMWAREREPO)" && $(GITBINARY) pull && cd .. \
-	) else ( \
-		${GITBINARY} clone https://code.osu.edu/fehelectronics/proteus_software/$(FIRMWAREREPO).git \
+SRC_FILES := $(wildcard ./*.cpp)
+OBJ_FILES := $(patsubst ./%.cpp,./%.o,$(SRC_FILES))
+
+all: pre-build $(EXEC)
+
+pre-build:
+ifeq ($(OS),Windows_NT)	
+# check for internet connection
+	@ping -n 1 -w 1000 $(FEHURL) > NUL & \
+	if errorlevel 1 \
+	( \
+		( echo "Warning: No internet connection!" ) \
 	) \
-	
-	$(CXX) -g -std=c++11 -Wall -Isimulator_firmware/include -c *.cpp
-	$(CXX) -Lsimulator_firmware/lib/ -o game.exe *.o -lfirmware_win -lws2_32 -lfirmware_win
+	else \
+	( \
+		( \
+			cd $(LIB_DIR) && \
+			$(GITBINARY) stash && \
+			$(GITBINARY) pull && \
+			cd .. \
+		) \
+	) 
 else
+# Mac/Linux
 	@ping -c 1 -W 1000 $(FEHURL) > /dev/null ; \
 	if [ "$$?" -ne 0 ]; then \
-		echo "Warning: No internet connection!" ; \
+		echo "Warning: No internet connection!"; \
 	else \
-		if [ -d "$(FIRMWAREREPO)" ]; then \
-			cd $(FIRMWAREREPO) ; \
-			$(GITBINARY) pull ; \
-			cd .. ; \
-		else \
-			$(GITBINARY) clone https://code.osu.edu/fehelectronics/proteus_software/$(FIRMWAREREPO).git ; \
-		fi \
+		cd $(LIB_DIR) ; \
+		$(GITBINARY) stash ; \
+		$(GITBINARY) pull ; \
+		cd .. ; \
 	fi \
 
+endif
 
-	$(CXX) -g -std=c++11 -Wall -Isimulator_firmware/include -c *.cpp
-	$(CXX) -Lsimulator_firmware/lib/ -o game *.o -lfirmware_mac
+$(EXEC): $(OBJ_FILES) $(OBJS)
+	$(CC) $(CPPFLAGS) $(WARNINGS) $(INC_DIRS) $(OBJ_FILES) $(OBJS) -o $(EXEC) $(LDFLAGS)
+
+./%.o: ./%.cpp
+	$(CC) $(CPPFLAGS) $(WARNINGS) $(INC_DIRS) -c -o $@ $<
+
+clean:
+ifeq ($(OS),Windows_NT)
+	del $(LIB_DIR)\*.o
+	del $(LIB_DIR)\*.d
+	del *.o *.d $(EXEC)
+else
+	rm $(LIB_DIR)/*.o $(LIB_DIR)/*.d
+	rm *.o *.d $(EXEC)
 endif
