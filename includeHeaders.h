@@ -4,6 +4,11 @@
 
 #include <string>
 #include <unistd.h>
+#include <iostream>
+#include "time.h"
 #include "fstream"
+using namespace std;
 
 #include "globals.h"
+#include "road.h"
+#include "vehicle.h"
