@@ -9,10 +9,10 @@
             "macFrameworkPath": [
                 "/Library/Developer/CommandLineTools/SDKs/MacOSX10.15.sdk/System/Library/Frameworks"
             ],
-            "compilerPath": "/usr/bin/clang",
+            "compilerPath": "/usr/bin/gcc",
             "cStandard": "c11",
             "cppStandard": "c++98",
-            "intelliSenseMode": "macos-clang-x64"
+            "intelliSenseMode": "macos-gcc-x64"
         }
     ],
     "version": 4

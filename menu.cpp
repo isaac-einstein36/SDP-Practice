@@ -1,26 +1,36 @@
-#include "includeHeaders.h"
-#include "includeFiles.h"
+#include "includeFile.h"
+
+#define CHAR_HEIGHT 17
+#define CHAR_WIDTH 12
 
 // Shows the menu
-void runMenu()
+/**
+ * @brief Displays the menu including animated road and car. Has user pick what option they want to do (play, rules, etc.)
+ * 
+ * @return const char* userChoice which is what the user picked to do (play, rules, etc.)
+ */
+const char *runMenu()
 {
-
-        // thread t1(initializeMenu);
-
 
         // Clear screen
         initializeMenu();
 
-        // Draw road with car going across
-        // menuGraphics();
+        // Draw road with car going across while title is drawn
+        menuGraphics();
 
-        // // Write the title
-        // menuTitle();
+        // Pause
+        usleep(carSpeed * 1E6);
 
-        // // Show the menu options
-        // showMenuOptions();
+        // Display Credits
+        credits();
+
+        // Show the menu options
+        const char *userChoice = showMenuOptions();
+
+        return userChoice;
 }
 
+// Initializes the menu to LIGHTSALMON
 void initializeMenu()
 {
 
@@ -31,6 +41,7 @@ void initializeMenu()
         LCD.Update();
 }
 
+// Function to draw animated road, and then calls function to draw the car moving across road while title is drawn
 void menuGraphics()
 {
 
@@ -41,49 +52,112 @@ void menuGraphics()
         // menuRoad.animated = true;
         menuRoad.drawRoad();
 
-        usleep(1 * 1E6);
+        usleep(carSpeed * 1E6);
 
-        VEHICLE car("car", startRoad);
+        VEHICLE car("car2", startRoad);
 
-        car.setDelay(0.5);
+        car.setDelay(carSpeed);
 
-        // Move the vehicle to the end of the road
-        while (car.carPosX < 250)
+        carWithTitle(car);
+}
+
+// Draws a moving car along with "CROSSY ROAD"
+void carWithTitle(VEHICLE car)
+{
+
+        string title = "CROSSY-ROAD";
+
+        for (int i = 0; i < title.length(); i++)
         {
-                car.moveVehicle();
+
+                car.drawVehicle();
+
+                // Draw the car and each letter of title
+                LCD.SetFontColor(GRAY);
+                LCD.WriteAt(title.at(i), XDIM / (title.length() * 2) * i + (XDIM / 4), 100);
+
+                if (car.carPosX < 250)
+                {
+                        // LCD.WriteAt(i, XDIM / (title.length() * 2) * i + (XDIM / 4), 200);
+                        car.moveVehicle();
+                }
+                else
+                {
+                        LCD.Update();
+                }
         }
-
-        // Erase car after it gets to the end of the road
-        usleep(0.5 * 1E6);
-
-        car.eraseVehicle();
 }
 
 /**
  * Function to show the menu options (i.e. play game, stats, instructions, etc.)
 */
-
-void showMenuOptions()
+const char *showMenuOptions()
 {
         LCD.SetFontColor(GRAY);
-        int numBoxes = 4;
+        int numBoxes = 4, boxLength = XDIM / (numBoxes + 1), boxHeight = 30;
+        int yBox = 150;
+        int xBoxes[numBoxes];
+
+        // B/C letters are 12 pixels wide and boxes are 70, strings can only be 5 char or less (70/12 = 5.8)
+        const char *options[4] = {"Play", "Stats", "Rules", "Quit"};
+
+        // Draw menu options
         for (int i = 0; i < numBoxes; i++)
         {
-                LCD.DrawRectangle(XDIM / (numBoxes)*i + 5, 150, 70, 25);
+                int xBox = XDIM / (numBoxes)*i + 5;
+                LCD.DrawRectangle(xBox, yBox, boxLength, boxHeight);
+                xBoxes[i] = xBox;
+
+                // Fill in text for boxes
+                // Convert to string to find length
+                string str(options[i]);
+
+                int len = str.length();
+
+                int xPos = (((boxLength - (CHAR_WIDTH * len)) / 2) + xBoxes[i]);
+                int yPos = ((boxHeight - CHAR_HEIGHT) / 2) + yBox;
+
+                // Write the text centered in the box
+                LCD.WriteAt(options[i], xPos, yPos);
         }
+
+        // Wait for touch
+        float x, y;
+        while (!LCD.Touch(&x, &y))
+        {
+        }
+
+        // Wait until the touch releases
+        while (LCD.Touch(&x, &y))
+        {
+        }
+
+        // Based on where the touch was, select the corresponding function
+        for (int i = 0; i < 4; i++)
+        {
+                if (x >= xBoxes[i] && x <= xBoxes[i] + boxLength)
+                {
+                        // LCD.WriteAt(options[i], 0, 225);
+                        // LCD.Update();
+                        return options[i];
+                }
+        }
+
+        return "";
 }
 
-void menuTitle()
+// Function to display credits
+void credits()
 {
 
-        string title = "CROSSY ROAD";
+        char credits[] = "By : Isaac Einstein";
 
-        for (int i = 0; i < title.length(); i++)
-        {
-                LCD.WriteAt(title.at(i), XDIM / (title.length() * 2) * i + (XDIM / 4), 100);
-                usleep(0.5 * 1E6);
-                LCD.Update();
-        }
+        // LCD.WriteAt(credits, (XDIM - sizeof(credits)) / 2, 200);
+        int length = sizeof(credits) / sizeof(*credits) - 1;
+
+        int xPos = (XDIM - CHAR_WIDTH * length) / 2;
+
+        LCD.WriteAt(credits, xPos, YDIM - CHAR_HEIGHT);
 
         LCD.Update();
 }

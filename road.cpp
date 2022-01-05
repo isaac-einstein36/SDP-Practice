@@ -1,4 +1,5 @@
-#include "includeHeaders.h"
+// #include "includeHeaders.h"
+#include "includeFile.h"
 
 ROAD::ROAD(int start)
 {
@@ -42,7 +43,7 @@ void ROAD::drawRoad()
                 if (animated)
                 {
                         // Wait a second before drawing each line
-                        usleep(0.6 * 1E6);
+                        usleep(carSpeed * 1E6);
                         LCD.Update();
                 }
         }

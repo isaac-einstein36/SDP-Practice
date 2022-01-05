@@ -4,7 +4,7 @@ GITBINARY = git
 FIRMWAREREPO = simulator_libraries
 FEHURL = code.osu.edu
 
-CPPFLAGS = -MMD -MP -Os -DOBJC_OLD_DISPATCH_PROTOTYPES -g -std=c++17
+CPPFLAGS = -MMD -MP -Os -DOBJC_OLD_DISPATCH_PROTOTYPES -g 
 
 WARNINGS = -Wall
 

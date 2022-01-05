@@ -1,9 +1,9 @@
 // File for all include statements
-#include "includeHeaders.h"
-#include "includeFiles.h"
+#include "includeFile.h"
 
 // Declare global variables
 int XDIM, YDIM;
+float carSpeed;
 
 // Main function
 int main()
@@ -11,23 +11,29 @@ int main()
     // Initialize global variables
     XDIM = 320;
     YDIM = 240;
+    carSpeed = 0.4;
 
-    runMenu();
+    LCD.ClearBuffer();
+    LCD.Clear();
+
+    // Run the menu function to show the menu and have user click which option to do (play, rules, etc.)
+    const char *userChoice = runMenu();
+
+    LCD.Clear();
+    LCD.Write(userChoice);
 
     // Pause for click
-    int x, y;
-    while (!LCD.Touch(&x, &y))
+    float a, b;
+    while (!LCD.Touch(&a, &b))
     {
     }
 
-    LCD.Clear();
     LCD.Write("GOODBYE!");
 
+    // Never end
     while (1)
     {
-
         LCD.Update();
-        // Never end
     }
     return 0;
 }

@@ -8,12 +8,12 @@ public:
         void moveVehicle();
         void setDelay(float delay);
 
-        // Make the car's position accessible outside of the class
+        // Make the car's position and delay time accessible outside of the class
         int carPosX;
         int carPosY;
+        float delayTime;
 
 private:
-        float delayTime;
         char type[100];
         char name[100];
 };
